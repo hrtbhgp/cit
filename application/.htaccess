@@ -1,0 +1,12 @@
+
+
+<IfModule authz_core_module>
+    RewriteCond %{REQUEST_FILENAME} !/(application/views/*/css|js|images/*)/
+    RewriteCond %{REQUEST_FILENAME} !/(application/controllers/*)/
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^(.*)$ ./index.php/$1 [L,QSA]
+</IfModule>
+<IfModule !authz_core_module>
+    Deny from all
+</IfModule>
