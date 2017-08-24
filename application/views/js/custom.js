@@ -81,7 +81,6 @@ function getNotificacoes()
 
                 $("#notifBody").html(newTable);
                 console.log("a")
-                
             }
             else{
                 $.notify("Ocorreu um erro.", "error");
@@ -92,3 +91,26 @@ function getNotificacoes()
         });
 }
 
+function getFinalidades()
+{
+    $.get("EntregaPecas/GetFinalidades")
+        .done(function(response) {
+            doc = response;
+            var resp = JSON.parse(response);
+            
+            if (resp.status === 200) {
+                var parser = new DOMParser();
+                a = parser.parseFromString(resp.response, "text/xml");
+                
+
+                //$(doc).find("#ctl00_ctl00_Conteudo_cpHabilus_dgNotificacoes > tbody > tr").each(function(tr) { tr.innerHTML })
+                console.log(a);
+            }
+            else{
+                $.notify("Ocorreu um erro.", "error");
+            }
+        })
+        .fail(function() {
+            $.notify("Ocorreu um erro.", "error");
+        });
+}

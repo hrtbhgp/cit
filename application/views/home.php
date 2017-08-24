@@ -65,14 +65,13 @@
                     <li>
                         <a data-toggle="modal" href="" onClick="getNotificacoes()" data-target="#notificacoesModal">Notificações</a>
                     </li>
-                    <?php endif; ?>
+                    
                     <li>
-                        <a class="page-scroll" href="#portfolio">Portfolio</a>
+                        <a onClick="getFinalidades()">Pecas Processuais Finalidades</a>
                     </li>
                     <li>
                         <a class="page-scroll" href="#contact">Contact</a>
                     </li>
-                    <?php if ($this->session->logged_in == true) : ?>
                     <li>
                         <a class="page-scroll" href="" onClick="logout()">Logout</a>
                     </li>
