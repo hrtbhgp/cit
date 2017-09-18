@@ -22,7 +22,7 @@ class EntregaPecas extends CI_Controller {
 		$url = 'https://citius.tribunaisnet.mj.pt/habilus/myhabilus/pecproconline/Definicao.aspx';
 
 		$resp = HttpRequest($url, $cookie);
-
+		
 		$tableAux =  explode('<select name="UcStepsPlaceholder1$UcStepFinalidade1$ddlFinalidade"', $resp['body'], 2)[1];
 		$table = explode('</select>', $tableAux, 2)[0];
 		$table = '<select ' . $table . "</select>";

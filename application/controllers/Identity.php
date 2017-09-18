@@ -10,12 +10,13 @@ class Identity extends CI_Controller {
 
 		$url = 'https://citius.tribunaisnet.mj.pt/habilus/myhabilus/login.aspx?ReturnUrl=/habilus/myhabilus/Entrada.aspx';
 		$sessionId = $this->generateRandomString($length = 24);
+		$startUp = $this->getStartUpValues();
 
 		$postData = array(
 			'txtUserName' => $username, 
 			'txtUserPass' => $password, 
-			'__VIEWSTATE' => '/wEPDwUIOTE4NjE1ODcPZBYCAgMPZBYGAggPZBYCAgEPZBYEAgMPDxYCHgRUZXh0BbABQSBwYWxhdnJhLXBhc3NlIGRldmVyw6EgY29udGVyIHBlbG8gbWVub3MgNiBjYXJhY3RlcmVzIG51bSBtw6F4aW1vIGRlIDIwLCBkZXZlbmRvIHNlciBjb21wb3N0YSBwb3IgcGVsbyBtZW5vcyAxIGxldHJhKHMpIG1pbsO6c2N1bGEocyksIDEgbGV0cmEocykgbWFpw7pzY3VsYShzKSBlIDEgbsO6bWVybyhzKS5kZAIFDw8WBB4MRXJyb3JNZXNzYWdlBbABQSBwYWxhdnJhLXBhc3NlIGRldmVyw6EgY29udGVyIHBlbG8gbWVub3MgNiBjYXJhY3RlcmVzIG51bSBtw6F4aW1vIGRlIDIwLCBkZXZlbmRvIHNlciBjb21wb3N0YSBwb3IgcGVsbyBtZW5vcyAxIGxldHJhKHMpIG1pbsO6c2N1bGEocyksIDEgbGV0cmEocykgbWFpw7pzY3VsYShzKSBlIDEgbsO6bWVybyhzKS4eB0Rpc3BsYXkLKipTeXN0ZW0uV2ViLlVJLldlYkNvbnRyb2xzLlZhbGlkYXRvckRpc3BsYXkAZGQCCw8WAh4HVmlzaWJsZWhkAhMPDxYCHwAFTHYuIDUuMC43LjAtMSB8IMOabHRpbWEgYWN0dWFsaXphw6fDo286IDE0LzA3LzIwMTcgMTI6MTk6NDI8YnIgLz7CqSAyMDA0LTIwMTdkZBgCBR5fX0NvbnRyb2xzUmVxdWlyZVBvc3RCYWNrS2V5X18WAQUKSW1CdG5Mb2dpbgUPQ2FwdGNoYUNvbnRyb2wxDwUkYzA1ZmIyZTAtNTRlNi00OTU3LTkyMDAtOWY1M2MzNzIxOThlZASzlfpov4UCjjsKKGnu2ydGsJGm',
-			'__EVENTVALIDATION' => '/wEdAARh7wnWickpjBo3q+mE3aEdY3plgk0YBAefRz3MyBlTcA6Puailico2fWp193TJgzFPnrZHYVKWMZcDKd6/3ifWaPbS/L+NdEL67Kqx8oN37iZdYmM=',
+			'__VIEWSTATE' => $startUp["viewState"],
+			'__EVENTVALIDATION' => $startUp["eventValidation"],
 			'ImBtnLogin.x' => '24',
 			'ImBtnLogin.y' => '29'
 		);
@@ -51,7 +52,7 @@ class Identity extends CI_Controller {
 			return;
 		}
 		
-		if ($httpcode == 302 || $httpcode == 200) { // Success
+		if ($httpcode == 302) { // Success
 
 			$this->session->set_userdata(
 				array(
@@ -100,5 +101,17 @@ class Identity extends CI_Controller {
             $randomString .= $characters[rand(0, $charactersLength - 1)];
         }
         return $randomString;
-    }
+	}
+	
+	private function getStartUpValues(){
+		$this->load->helper('http');
+		$this->load->helper('string');
+
+		$resp = HttpRequest('https://citius.tribunaisnet.mj.pt/habilus/myhabilus/login.aspx?ReturnUrl=%2fhabilus%2fmyhabilus%2fEntrada.aspx', '');
+
+		$viewState = getValueInsideString($resp['body'], 'id="__VIEWSTATE" value="', '"');
+		$eventValidation = getValueInsideString($resp['body'], 'id="__EVENTVALIDATION" value="', '"');
+		
+		return array('viewState' => $viewState, 'eventValidation' => $eventValidation);
+	}
 }
