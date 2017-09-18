@@ -50,8 +50,8 @@ class Identity extends CI_Controller {
 			echo json_encode(array ('status'=> 500 ));
 			return;
 		}
-
-		if ($httpcode == 302) { // Success
+		
+		if ($httpcode == 302 || $httpcode == 200) { // Success
 
 			$this->session->set_userdata(
 				array(
